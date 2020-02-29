@@ -3,16 +3,16 @@ import json
 from time import time
 from uuid import uuid4
 
-from flask import Flask, jsonify, request, render_template
-from pusher import Pusher
-from decouple import config
+from flask import Flask, jsonify, request, render_template, make_response
+# from pusher import Pusher
+# from decouple import config
 
 from room import Room
 from player import Player
 from world import World
 
 # Look up decouple for config variables
-pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
+# pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
 
 world = World()
 
@@ -53,8 +53,23 @@ def register():
 @app.route('/api/login/', methods=['POST'])
 def login():
     # IMPLEMENT THIS
-    response = {'error': "Not implemented"}
-    return jsonify(response), 400
+
+    values = request.get_json()
+    required = ['username', 'password']
+
+    if not all(k in values for k in required):
+        response = {'message' : 'Missing values'}
+        return jsonify(response), 400
+
+    username = values.get('username')
+    password = values.get('password')
+    
+    response = world.authenticate_user(username, password)
+
+    if 'error' in response:
+        return jsonify(response), 500
+    else:
+        return jsonify(response), 200
 
 
 @app.route('/api/adv/init/', methods=['GET'])
