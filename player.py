@@ -2,12 +2,14 @@ import random
 import uuid
 
 class Player:
-    def __init__(self, name, starting_room, password_hash):
+    def __init__(self, name, starting_room, password_hash, coin_pouch = 10, inventory = []):
         self.username = name
         self.current_room = starting_room
         self.auth_key = Player.__generate_auth_key()
         self.password_hash = password_hash
         self.uuid = uuid.uuid4
+        self.coin_pouch = coin_pouch
+        self.inventory = inventory
 
     def __generate_auth_key():
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
