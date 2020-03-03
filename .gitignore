@@ -3,4 +3,5 @@ tmp
 
 .vscode/
 venv
+__pycache__
 .idea
