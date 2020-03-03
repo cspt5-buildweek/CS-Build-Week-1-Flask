@@ -54,8 +54,6 @@ def register():
 
 @app.route('/api/login/', methods=['POST'])
 def login():
-    # IMPLEMENT THIS
-
     values = request.get_json()
     required = ['username', 'password']
 
@@ -118,7 +116,6 @@ def move():
 
 @app.route('/api/adv/take/', methods=['POST'])
 def take_item():
-    # IMPLEMENT THIS
     # create player variable
     # if no player, respond with error and 500
     player = get_player_by_header(world, request.headers.get("Authorization"))
@@ -146,7 +143,6 @@ def take_item():
 
 @app.route('/api/adv/drop/', methods=['POST'])
 def drop_item():
-    # IMPLEMENT THIS
     # create player variable
     # if no player, respond with error and 500
     player = get_player_by_header(world, request.headers.get("Authorization"))
@@ -159,7 +155,7 @@ def drop_item():
 
     # loop through players inventory
     for item in inventory:
-        if item.title == values['item_title']:
+        if item.title == values['title']:
     # if player has item, remove item from players inventory
             player.inventory.remove(item)
     # add item to current rooms inventory
@@ -169,7 +165,6 @@ def drop_item():
 
 @app.route('/api/adv/inventory/', methods=['GET'])
 def inventory():
-    # IMPLEMENT THIS
     # create player variable
     # if no player, respond with error and 500
     player = get_player_by_header(world, request.headers.get("Authorization"))
@@ -194,7 +189,6 @@ def inventory():
 
 @app.route('/api/adv/buy/', methods=['POST'])
 def buy_item():
-    # IMPLEMENT THIS
     # create player variable
     # if no player, respond with error and 500
     player = get_player_by_header(world, request.headers.get("Authorization"))
@@ -225,7 +219,6 @@ def buy_item():
 
 @app.route('/api/adv/sell/', methods=['POST'])
 def sell_item():
-    # IMPLEMENT THIS
     # create player variable
     # if no player, respond with error and 500
     player = get_player_by_header(world, request.headers.get("Authorization"))
