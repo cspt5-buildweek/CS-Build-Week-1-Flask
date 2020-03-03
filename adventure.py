@@ -1,9 +1,11 @@
 import hashlib
 import json
+import util
 from time import time
 from uuid import uuid4
 
 from flask import Flask, jsonify, request, render_template, make_response
+from flask_migrate import Migrate
 # from pusher import Pusher
 # from decouple import config
 
@@ -12,6 +14,9 @@ from player import Player
 from world import World
 from items import Items, Clothing, Weapon
 from store import Store
+from models import db
+from models.node import NodesModel
+from models.link import LinksModel
 
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
@@ -19,6 +24,9 @@ from store import Store
 world = World()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = util.get_db_connect_string()
+db.init_app(app)
+migrate = Migrate(app, db)
 
 
 def get_player_by_header(world, auth_header):
@@ -52,18 +60,19 @@ def register():
     else:
         return jsonify(response), 200
 
+
 @app.route('/api/login/', methods=['POST'])
 def login():
     values = request.get_json()
     required = ['username', 'password']
 
     if not all(k in values for k in required):
-        response = {'message' : 'Missing values'}
+        response = {'message': 'Missing values'}
         return jsonify(response), 400
 
     username = values.get('username')
     password = values.get('password')
-    
+
     response = world.authenticate_user(username, password)
 
     if 'error' in response:
@@ -141,6 +150,7 @@ def take_item():
             player.current_room.items.remove(item)
             return jsonify(f"{player.username}, you picked up a {item.title}."), 200
 
+
 @app.route('/api/adv/drop/', methods=['POST'])
 def drop_item():
     # create player variable
@@ -162,6 +172,7 @@ def drop_item():
             player.current_room.items.append(item)
     # return jsonify message of dropped item
             return jsonify(f"{player.username}, you have dropped a {item.title} and it is no longer in your inventory."), 200
+
 
 @app.route('/api/adv/inventory/', methods=['GET'])
 def inventory():
@@ -186,6 +197,7 @@ def inventory():
 
     # return jsonify and 200
     return jsonify({'Current Iventory': player_list, 'Current Money': player.coin_pouch}), 200
+
 
 @app.route('/api/adv/buy/', methods=['POST'])
 def buy_item():
@@ -216,6 +228,7 @@ def buy_item():
                 return jsonify(f"{player.username}, you have bought {item.title}. You now have {player.coin_pouch} coins left."), 200
             else:
                 return jsonify(f"You do not have enough coins to buy a {item.title}.")
+
 
 @app.route('/api/adv/sell/', methods=['POST'])
 def sell_item():
@@ -248,6 +261,7 @@ def sell_item():
             return jsonify(f"{player.username}, you have sold a {item.title}. You now have {player.coin_pouch} coins.")
         else:
             return jsonify("You can't sell that item here."), 500
+
 
 @app.route('/api/adv/rooms/', methods=['GET'])
 def rooms():
