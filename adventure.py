@@ -61,6 +61,10 @@ def register():
         return jsonify(response), 200
 
 
+@app.route('/', methods=['GET'])
+def test():
+    return jsonify('Welcome player!')
+
 @app.route('/api/login/', methods=['POST'])
 def login():
     values = request.get_json()
