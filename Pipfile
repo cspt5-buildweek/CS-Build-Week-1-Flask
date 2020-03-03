@@ -12,6 +12,9 @@ gunicorn = "*"
 pusher = "*"
 python-decouple = "*"
 bcrypt = "*"
+psycopg2-binary = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.7"

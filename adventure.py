@@ -4,12 +4,17 @@ from time import time
 from uuid import uuid4
 
 from flask import Flask, jsonify, request, render_template, make_response
+from flask_migrate import Migrate
 # from pusher import Pusher
 # from decouple import config
 
+from util import get_db_connect_string
 from room import Room
 from player import Player
 from world import World
+from models import db
+from models.node import NodesModel
+from models.link import LinksModel
 
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
@@ -17,6 +22,9 @@ from world import World
 world = World()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = get_db_connect_string()
+db.init_app(app)
+migrate = Migrate(app, db)
 
 
 def get_player_by_header(world, auth_header):
@@ -50,6 +58,7 @@ def register():
     else:
         return jsonify(response), 200
 
+
 @app.route('/api/login/', methods=['POST'])
 def login():
     # IMPLEMENT THIS
@@ -58,12 +67,12 @@ def login():
     required = ['username', 'password']
 
     if not all(k in values for k in required):
-        response = {'message' : 'Missing values'}
+        response = {'message': 'Missing values'}
         return jsonify(response), 400
 
     username = values.get('username')
     password = values.get('password')
-    
+
     response = world.authenticate_user(username, password)
 
     if 'error' in response:
@@ -120,11 +129,13 @@ def take_item():
     response = {'error': "Not implemented"}
     return jsonify(response), 400
 
+
 @app.route('/api/adv/drop/', methods=['POST'])
 def drop_item():
     # IMPLEMENT THIS
     response = {'error': "Not implemented"}
     return jsonify(response), 400
+
 
 @app.route('/api/adv/inventory/', methods=['GET'])
 def inventory():
@@ -132,17 +143,20 @@ def inventory():
     response = {'error': "Not implemented"}
     return jsonify(response), 400
 
+
 @app.route('/api/adv/buy/', methods=['POST'])
 def buy_item():
     # IMPLEMENT THIS
     response = {'error': "Not implemented"}
     return jsonify(response), 400
 
+
 @app.route('/api/adv/sell/', methods=['POST'])
 def sell_item():
     # IMPLEMENT THIS
     response = {'error': "Not implemented"}
     return jsonify(response), 400
+
 
 @app.route('/api/adv/rooms/', methods=['GET'])
 def rooms():
