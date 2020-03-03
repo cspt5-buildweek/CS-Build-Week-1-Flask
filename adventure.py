@@ -1,5 +1,6 @@
 import hashlib
 import json
+import util
 from time import time
 from uuid import uuid4
 
@@ -8,7 +9,6 @@ from flask_migrate import Migrate
 # from pusher import Pusher
 # from decouple import config
 
-from util import get_db_connect_string
 from room import Room
 from player import Player
 from world import World
@@ -22,7 +22,7 @@ from models.link import LinksModel
 world = World()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = get_db_connect_string()
+app.config['SQLALCHEMY_DATABASE_URI'] = util.get_db_connect_string()
 db.init_app(app)
 migrate = Migrate(app, db)
 

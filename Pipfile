@@ -15,6 +15,7 @@ bcrypt = "*"
 psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

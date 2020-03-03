@@ -1,5 +1,7 @@
 from os import environ
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def get_db_connect_string():
     db_user = environ.get("DB_USER")
