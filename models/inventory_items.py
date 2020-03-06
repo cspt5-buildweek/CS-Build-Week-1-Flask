@@ -8,9 +8,9 @@ player_inventory = db.Table('inventory_items',
 class InventoryModel(db.Model):
     __tablename__ = 'inventory'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    items = db.relationship("ItemsModel", secondary=player_inventory, backref=db.backref('items_in_inventory', lazy='dynamic'))
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    items = db.relationship("items", secondary=player_inventory, backref=db.backref('items_in_inventory', lazy='dynamic'))
 
     # def __init__(self, user_id, items):
     #     self.user_id = user_id
@@ -19,7 +19,7 @@ class InventoryModel(db.Model):
 class ItemsModel(db.Model):
     __tablename__ = 'items'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     title = db.Column(db.String(), nullable=False)
     description = db.Column(db.String(), nullable=False)
     price = db.Column(db.Integer, nullable=False)
