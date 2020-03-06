@@ -23,9 +23,14 @@ class World:
         elif self.get_player_by_username(username) is not None:
             return {'error': "Username already exists"}
         password_hash = bcrypt.hashpw(password1.encode(), self.password_salt)
-        player = Player(username, self.starting_room, password_hash)
-        self.players[player.auth_key] = player
-        return {'key': player.auth_key}
+
+        new_user = UserModel(username=username, password=password_hash)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # player = Player(username, self.starting_room, password_hash)
+        # self.players[new_user.auth_key] = new_user
+        return {'new player added'}
 
     def get_player_by_auth(self, auth_key):
         if auth_key in self.players:

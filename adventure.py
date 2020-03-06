@@ -17,6 +17,10 @@ from store import Store
 from models import db
 from models.node import NodesModel
 from models.link import LinksModel
+from models.user import UserModel
+from models.inventory import InventoryModel
+from models.item import ItemsModel
+from models.inventory_items import player_inventory
 
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
@@ -59,7 +63,7 @@ def register():
         return jsonify(response), 500
     else:
         return jsonify(response), 200
-
+    
 
 @app.route('/', methods=['GET'])
 def test():
