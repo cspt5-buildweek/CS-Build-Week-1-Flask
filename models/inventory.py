@@ -1,8 +1,8 @@
-from models import db
+# from models import db
 
-class InventoryModel(db.Model):
-    __tablename__ = 'inventory'
+# class InventoryModel(db.Model):
+#     __tablename__ = 'inventory'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     items = db.relationship("ItemModel", secondary=)
