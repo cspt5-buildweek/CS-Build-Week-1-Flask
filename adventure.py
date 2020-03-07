@@ -11,12 +11,19 @@ from room import Room
 from player import Player
 from world import World
 
+from map import gen_map
+
 # Look up decouple for config variables
-pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
+# pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
 
 world = World()
 
 app = Flask(__name__)
+
+
+@app.route('/api/map', methods=['GET'])
+def map():
+    return jsonify(gen_map(), 200)
 
 
 def get_player_by_header(world, auth_header):
