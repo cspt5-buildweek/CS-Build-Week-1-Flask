@@ -25,7 +25,7 @@ class World:
         elif self.get_player_by_username(username) is not None:
             return {'error': "Username already exists"}
         password_hash = bcrypt.hashpw(password1.encode(), self.password_salt)
-        player = Player.add_new_user()
+        player = Player.add_new_user(username, password_hash)
         self.players[player.auth_key] = player
         return {'Welcome, here is your key': player.auth_key}
 

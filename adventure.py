@@ -60,7 +60,7 @@ def register():
     if 'error' in response:
         return jsonify(response), 500
     else:
-        return jsonify(response), 200
+        return jsonify(response), 201
         
 
 @app.route('/', methods=['GET'])

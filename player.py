@@ -14,8 +14,8 @@ class Player:
         self.coin_pouch = coin_pouch
         self.inventory = inventory
 
-    def add_new_user():
-        new_user = UserModel('abc', 'newpass')
+    def add_new_user(username, password):
+        new_user = UserModel(username, password)
         db.session.add(new_user)
         db.session.commit()
         return {'new player added'}
