@@ -15,10 +15,11 @@ class Player:
         self.inventory = inventory
 
     def add_new_user(username, password):
-        new_user = UserModel(username, password)
+        new_user = UserModel(username, password, Player.__generate_auth_key())
         db.session.add(new_user)
         db.session.commit()
-        return {'new player added'}
+        player = UserModel.query.filter_by(username=username).first()
+        return player 
 
     def __generate_auth_key():
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
