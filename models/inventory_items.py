@@ -10,7 +10,7 @@ class InventoryModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     # user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    items = db.relationship("items", secondary=player_inventory, backref=db.backref('items_in_inventory', lazy='dynamic'))
+    items = db.relationship("ItemsModel", secondary=player_inventory, backref=db.backref('items_in_inventory', lazy='dynamic'))
 
     # def __init__(self, user_id, items):
     #     self.user_id = user_id

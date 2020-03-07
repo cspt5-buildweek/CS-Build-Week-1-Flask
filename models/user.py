@@ -13,9 +13,9 @@ class UserModel(db.Model):
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.starting_room = starting_room
-        self.inventory = inventory
-        self.coin_pouch = coin_pouch
+        # self.starting_room = starting_room
+        # self.inventory = inventory
+        # self.coin_pouch = coin_pouch
 
     def __repr__(self):
         return f"<User {{ 'username': {self.username}, 'password': {self.password} }}>"
