@@ -1,16 +1,12 @@
 from uuid import uuid4
 from random import choice, shuffle
 
-import sys
-
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
 
 # values of dimensions should always be non-negative
 # values of origin are expected to be within 0 and their respective dimension, inclusive.
+# defaults are small values intended for testing. Pass larger values for actual usage
 def gen_map(rooms=10, dimensions=(10, 10), origin=(0, 0)):
-    remaining = [rooms]
+
     map = {
         'rooms': {},
         'rooms_list': [],
@@ -18,7 +14,7 @@ def gen_map(rooms=10, dimensions=(10, 10), origin=(0, 0)):
         'dimensions': dimensions
     }
 
-    generate_room(origin, map, remaining)
+    generate_room(origin, map)
     map['start'] = map['rooms'][origin]
 
     timeout = 0
@@ -52,21 +48,34 @@ def generate_room(location, map, parent=None):
 
 
 def link_rooms(room_1, room_2, map):
-    # room_1_dir, room_2_dir = get_dir(room_1, room_2)
+    (room_1_dir, room_2_dir) = get_dir(room_1, room_2)
 
-    # map['rooms'][room_1]['halls'][room_1_dir]: map['rooms'][room_2]['id']
+    map['rooms'][room_1]['halls'][room_1_dir] = map['rooms'][room_2]['id']
+    map['rooms'][room_2]['halls'][room_2_dir] = map['rooms'][room_1]['id']
+    map['halls_list'].append({
+        'id': uuid4(),
+        'nodes': {
+            str(map['rooms'][room_1]['id']): {
+                'to': map['rooms'][room_2]['id'],
+                'dir': room_1_dir
+            },
+            str(map['rooms'][room_2]['id']): {
+                'to': map['rooms'][room_1]['id'],
+                'dir': room_2_dir
+            }
+        }
+    })
     pass
 
 
 # accepts two "location" tuples, and returns a tuple where each entry describes the direction its neighbor is located in, relative to it
 def get_dir(loc_1, loc_2):
-    print(f'LOCATIONS: {loc_1}, {loc_2}', file=sys.stdout)
-    sys.stdout.flush()
+    # print(f'LOCATIONS: {loc_1}, {loc_2}')
 
     if loc_1[0] == loc_2[0] and loc_1[1] == loc_2[1] - 1:
         return ('s', 'n')
 
-    elif loc_1[0] == loc_2[1] and loc_1[1] == loc_2[1] + 1:
+    elif loc_1[0] == loc_2[0] and loc_1[1] == loc_2[1] + 1:
         return ('n', 's')
 
     elif loc_1[1] == loc_2[1] and loc_1[0] == loc_2[0] - 1:
@@ -74,6 +83,8 @@ def get_dir(loc_1, loc_2):
 
     elif loc_1[1] == loc_2[1] and loc_1[0] == loc_2[0] + 1:
         return ('w', 'e')
+    else:
+        raise ValueError(f'invalid directions: {loc_1} {loc_2}')
 
 
 # I've chosen to follow svg coordinate conventions
@@ -94,3 +105,7 @@ def get_possible_new_neighbors(location, map):
         valid_locations.append((location[0] + 1, location[1]))
 
     return valid_locations
+
+
+def print_map():
+    gen_map()

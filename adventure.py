@@ -13,15 +13,21 @@ from world import World
 
 from map import gen_map
 
+from flask import Flask
+from flask_cors import CORS, cross_origin
+
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
 
 world = World()
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/api/map', methods=['GET'])
+@cross_origin()
 def map():
     return jsonify(gen_map(), 200)
 
