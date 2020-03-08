@@ -16,6 +16,9 @@ psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
+flask-restful = "*"
 
 [requires]
 python_version = "3.7"

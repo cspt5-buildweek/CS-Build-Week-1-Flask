@@ -1,4 +1,5 @@
 from models import db
+from models import ma
 
 
 class LinksModel(db.Model):
@@ -10,8 +11,8 @@ class LinksModel(db.Model):
     target_direction = db.Column(db.String(), nullable=False)
 
     def __init__(self, source_id, target_id, source_direction, target_direction):
-        self.source = source_id
-        self.target = target_id
+        self.source_id = source_id
+        self.target_id = target_id
         self.source_direction = source_direction
         self.target_direction = target_direction
 
@@ -22,3 +23,9 @@ class LinksModel(db.Model):
                f"'source_direction': {self.source_direction}, " \
                f"'target_direction': {self.target_direction} " \
                f"}}>"
+
+
+class LinksSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = LinksModel
+        include_fk = True

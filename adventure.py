@@ -1,24 +1,13 @@
-import hashlib
-import json
-import util
-from time import time
-from uuid import uuid4
+from src import util
 
-from flask import Flask, jsonify, request, render_template, make_response
+from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 # from pusher import Pusher
 # from decouple import config
 
-from room import Room
-from player import Player
 from world import World
-from items import Items, Clothing, Weapon
-from store import Store
+from items import Clothing, Weapon
 from models import db
-from models.node import NodesModel
-from models.link import LinksModel
-from models.user import UserModel
-from models.inventory_items import player_inventory, ItemsModel, InventoryModel
 
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
@@ -61,11 +50,12 @@ def register():
         return jsonify(response), 500
     else:
         return jsonify(response), 201
-        
+
 
 @app.route('/', methods=['GET'])
 def test():
     return jsonify('Welcome player!')
+
 
 @app.route('/api/login/', methods=['POST'])
 def login():
@@ -143,16 +133,16 @@ def take_item():
 
     # loop through player's inventory
     for item in player.inventory:
-        if item.title == values['item_title']:    
+        if item.title == values['item_title']:
             # if player already has item, return jsonify message 'already have item'
             return jsonify(f"{player.username}, you currently have a {item.title} in your inventory."), 500
 
     for item in items:
-    # if player doesn't have item
+        # if player doesn't have item
         if item.title == values['item_title']:
-    # add item to player's inventory
+            # add item to player's inventory
             player.inventory.append(item)
-    # remove item from current room's inventory
+            # remove item from current room's inventory
             player.current_room.items.remove(item)
             return jsonify(f"{player.username}, you picked up a {item.title}."), 200
 
@@ -172,12 +162,13 @@ def drop_item():
     # loop through players inventory
     for item in inventory:
         if item.title == values['title']:
-    # if player has item, remove item from players inventory
+            # if player has item, remove item from players inventory
             player.inventory.remove(item)
-    # add item to current rooms inventory
+            # add item to current rooms inventory
             player.current_room.items.append(item)
-    # return jsonify message of dropped item
-            return jsonify(f"{player.username}, you have dropped a {item.title} and it is no longer in your inventory."), 200
+            # return jsonify message of dropped item
+            return jsonify(
+                f"{player.username}, you have dropped a {item.title} and it is no longer in your inventory."), 200
 
 
 @app.route('/api/adv/inventory/', methods=['GET'])
@@ -193,13 +184,18 @@ def inventory():
     player_list = []
     # loop through players inventory
     for i in range(len(player.inventory)):
-    # if there is an item, if clothing, or if weapon, append it and attrs to above list
-        if(type(player.inventory[i]) is Item):
-            player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description, 'price': player.inventory[i].price})
-        elif(type(player.inventory[i]) is Clothing):
-            player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description, 'price': player.inventory[i].price, 'clothing type': player.inventory[i].clothing_type, 'protection': player.inventory[i].protection})
-        elif(type(player.inventory[i]) is Weapon):
-           player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description, 'price': player.inventory[i].price, 'weapon type': player.inventory[i].weapon_type, 'damage': player.inventory[i].damage}) 
+        # if there is an item, if clothing, or if weapon, append it and attrs to above list
+        if (type(player.inventory[i]) is Item):
+            player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description,
+                                'price': player.inventory[i].price})
+        elif (type(player.inventory[i]) is Clothing):
+            player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description,
+                                'price': player.inventory[i].price, 'clothing type': player.inventory[i].clothing_type,
+                                'protection': player.inventory[i].protection})
+        elif (type(player.inventory[i]) is Weapon):
+            player_list.append({'title': player.inventory[i].title, 'description': player.inventory[i].description,
+                                'price': player.inventory[i].price, 'weapon type': player.inventory[i].weapon_type,
+                                'damage': player.inventory[i].damage})
 
     # return jsonify and 200
     return jsonify({'Current Iventory': player_list, 'Current Money': player.coin_pouch}), 200
@@ -220,7 +216,7 @@ def buy_item():
         stock = player.current_room.store.in_stock
     else:
         return jsonify('This is not the store!'), 500
-    # if player is in store check inventory 
+    # if player is in store check inventory
     for item in in_stock:
         if item.title == values['title']:
             # if player has enough money
@@ -231,7 +227,8 @@ def buy_item():
                 player.coin_pouch -= item.price
                 # remove item from store's stock
                 player.current_room.store.in_stock.remove(item)
-                return jsonify(f"{player.username}, you have bought {item.title}. You now have {player.coin_pouch} coins left."), 200
+                return jsonify(
+                    f"{player.username}, you have bought {item.title}. You now have {player.coin_pouch} coins left."), 200
             else:
                 return jsonify(f"You do not have enough coins to buy a {item.title}.")
 

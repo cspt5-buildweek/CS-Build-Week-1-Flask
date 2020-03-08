@@ -1,4 +1,5 @@
 from models import db
+from models import ma
 
 
 class NodesModel(db.Model):
@@ -14,3 +15,9 @@ class NodesModel(db.Model):
 
     def __repr__(self):
         return f"<Node {{ 'name': {self.name}, 'description': {self.description} }}>"
+
+
+class NodesSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "description")
+        ordered = True
