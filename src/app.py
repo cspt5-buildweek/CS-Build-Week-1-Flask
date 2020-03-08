@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 
 from models import db, ma
-from routes.nodes import NodesListResource
+from routes.nodes import NodesListResource, NodeResource
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -18,4 +18,6 @@ ma.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
 
+# Nodes routes
 api.add_resource(NodesListResource, '/nodes')
+api.add_resource(NodeResource, '/nodes/<int:node_id>')
