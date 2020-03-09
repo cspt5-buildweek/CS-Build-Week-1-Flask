@@ -1,8 +1,11 @@
 from room import Room
 from player import Player
+from models.user import UserModel
+from models import db
 import random
 import math
 import bcrypt
+
 
 class World:
     def __init__(self):
@@ -22,9 +25,9 @@ class World:
         elif self.get_player_by_username(username) is not None:
             return {'error': "Username already exists"}
         password_hash = bcrypt.hashpw(password1.encode(), self.password_salt)
-        player = Player(username, self.starting_room, password_hash)
+        player = Player.add_new_user(username, password_hash)
         self.players[player.auth_key] = player
-        return {'key': player.auth_key}
+        return {'Welcome, here is your key': player.auth_key}
 
     def get_player_by_auth(self, auth_key):
         if auth_key in self.players:
@@ -42,7 +45,7 @@ class World:
         user = self.get_player_by_username(username)
         if user is None:
             return None
-        password_hash = bcrypt.hashpw(password.encode() ,self.password_salt)
+        password_hash = bcrypt.hashpw(password.encode(), self.password_salt)
         if user.password_hash == password_hash:
             return user
         return None
@@ -51,17 +54,17 @@ class World:
         # UPDATE THIS:
         # Should create 100 procuedurally generated rooms
         self.rooms = {
-            'outside':  Room("Outside Cave Entrance",
-                             "North of you, the cave mount beckons", 1, 1, 1),
+            'outside': Room("Outside Cave Entrance",
+                            "North of you, the cave mount beckons", 1, 1, 1),
 
-            'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
+            'foyer': Room("Foyer", """Dim light filters in from the south. Dusty
         passages run north and east.""", 2, 1, 2),
 
             'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
         into the darkness. Ahead to the north, a light flickers in
         the distance, but there is no way across the chasm.""", 3, 1, 3),
 
-            'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
+            'narrow': Room("Narrow Passage", """The narrow passage bends here from west
         to north. The smell of gold permeates the air.""", 4, 2, 2),
 
             'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
@@ -76,7 +79,3 @@ class World:
         self.rooms['narrow'].connect_rooms('n', self.rooms['treasure'])
 
         self.starting_room = self.rooms['outside']
-
-
-
-
