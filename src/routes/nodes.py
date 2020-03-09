@@ -15,8 +15,7 @@ class NodesListResource(Resource):
 
     def post(self):
         new_node = NodesModel(
-            name=request.json['name'],
-            description=request.json['description']
+            room_id=request.json['room_id']
         )
         db.session.add(new_node)
         db.session.commit()
@@ -31,10 +30,8 @@ class NodeResource(Resource):
     def patch(self, node_id):
         node = NodesModel.query.get_or_404(node_id)
 
-        if 'name' in request.json:
-            node.name = request.json['name']
-        if 'description' in request.json:
-            node.description = request.json['description']
+        if 'room_id' in request.json:
+            node.room_id = request.json['room_id']
 
         db.session.commit()
         return node_schema.dump(node)
