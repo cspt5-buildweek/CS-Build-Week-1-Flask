@@ -32,13 +32,13 @@ def gen_map(rooms=10, dimensions=(10, 10), origin=(0, 0)):
         rooms -= 1
         timeout = 0
 
-    map['rooms'] = { str(room['id']): room for _, room in map['rooms'].items()}
+    map['rooms'] = { room['id']: room for _, room in map['rooms'].items()}
     return map
 
 
 # parent is the LOCATION of the parent node as a tuple (x, y)
 def generate_room(location, map, parent=None):
-    room = { 'id': uuid4(), 'name': f'room {location}', 'desc': '', 'location': location, 'halls': {} }
+    room = { 'id': str(uuid4()), 'name': f'room {location}', 'desc': '', 'location': location, 'halls': {} }
 
     map['rooms'][room['location']] = room
     map['rooms_list'].append(room)
@@ -55,11 +55,11 @@ def link_rooms(room_1, room_2, map):
     map['halls_list'].append({
         'id': uuid4(),
         'nodes': {
-            str(map['rooms'][room_1]['id']): {
+            map['rooms'][room_1]['id']: {
                 'to': map['rooms'][room_2]['id'],
                 'dir': room_1_dir
             },
-            str(map['rooms'][room_2]['id']): {
+            map['rooms'][room_2]['id']: {
                 'to': map['rooms'][room_1]['id'],
                 'dir': room_2_dir
             }
@@ -108,4 +108,4 @@ def get_possible_new_neighbors(location, map):
 
 
 def print_map():
-    gen_map()
+    print(gen_map())
