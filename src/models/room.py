@@ -1,8 +1,8 @@
-from models import db
+from models import db, ma
 
 
-class NodesModel(db.Model):
-    __tablename__ = 'nodes'
+class RoomsModel(db.Model):
+    __tablename__ = 'rooms'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
@@ -13,4 +13,10 @@ class NodesModel(db.Model):
         self.description = description
 
     def __repr__(self):
-        return f"<Node {{ 'name': {self.name}, 'description': {self.description} }}>"
+        return f"<Room {{ 'name': {self.name}, 'description': {self.description} }}>"
+
+
+class RoomsSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "description")
+        ordered = True

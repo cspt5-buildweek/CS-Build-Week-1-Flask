@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def get_db_connect_string():
     db_user = environ.get("DB_USER")
     db_password = environ.get("DB_PASS")
@@ -11,4 +12,3 @@ def get_db_connect_string():
     db_name = environ.get("DB_NAME")
 
     return f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-

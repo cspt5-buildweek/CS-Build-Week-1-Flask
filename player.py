@@ -1,9 +1,11 @@
 import random
 import uuid
+from models.user import UserModel
+from models import db
 
 
 class Player:
-    def __init__(self, name, starting_room, password_hash, coin_pouch = 10, inventory = []):
+    def __init__(self, name, starting_room, password_hash, coin_pouch = 10, inventory = 0):
         self.username = name
         self.current_room = starting_room
         self.auth_key = Player.__generate_auth_key()
@@ -11,6 +13,13 @@ class Player:
         self.uuid = uuid.uuid4
         self.coin_pouch = coin_pouch
         self.inventory = inventory
+
+    def add_new_user(username, password):
+        new_user = UserModel(username, password, Player.__generate_auth_key())
+        db.session.add(new_user)
+        db.session.commit()
+        player = UserModel.query.filter_by(username=username).first()
+        return player 
 
     def __generate_auth_key():
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
