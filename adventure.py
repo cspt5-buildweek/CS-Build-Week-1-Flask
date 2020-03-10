@@ -7,17 +7,32 @@ from flask_migrate import Migrate
 
 from world import World
 from items import Clothing, Weapon
-from models import db
+# from models import db
+
+from map import gen_map
+
+from flask import Flask
+from flask_cors import CORS, cross_origin
 
 # Look up decouple for config variables
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
 
-world = World()
+# world = World()
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = util.get_db_connect_string()
-db.init_app(app)
-migrate = Migrate(app, db)
+# db.init_app(app)
+# migrate = Migrate(app, db)
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
+@app.route('/api/map', methods=['GET'])
+@cross_origin()
+def map():
+    return jsonify(gen_map(), 200)
 
 
 def get_player_by_header(world, auth_header):
